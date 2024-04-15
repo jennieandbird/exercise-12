@@ -157,25 +157,29 @@ In the model with **max. life(mo)** as the response variable, **weaning(mo)** ap
 -   Calculate and plot the model-averaged coefficients and their CIs across this set of top models.
 
 ```{r Step.6}
-# drop rows with missing data:
+# Drop rows with missing data:
 d_new <- d_new |> drop_na(`max. life(mo)`, `AFR(mo)`, `gestation(mo)`, `newborn(g)`, `weaning(mo)`, `wean mass(g)`, `litters/year`, `mass(g)`)
+
 # Model for max. life(mo):
 m_Life <- lm(data = d_new, `max. life(mo)` ~ `gestation(mo)` + `newborn(g)` + `weaning(mo)` + `wean mass(g)` + `litters/year` + `mass(g)`, na.action = "na.fail")
-# model selection:
+# Model selection:
 library(MuMIn)
 mods_Life <- dredge(m_Life, beta = "none")
 mods.avg_Life <- summary(model.avg(mods_Life, subset = delta < 4, fit = TRUE))
 print(mods.avg_Life)
+# Confidence intervals:
 confint_Life <- confint(mods.avg_Life)
 print(confint_Life)
 plot4 <- plot(mods.avg_Life, full = TRUE, intercept = FALSE)
 print(plot4)
+
 # Model for AFR(mo):
 m_AFR <- lm(data = d_new, `AFR(mo)` ~ `gestation(mo)` + `newborn(g)` + `weaning(mo)` + `wean mass(g)` + `litters/year` + `mass(g)`, na.action = "na.fail")
-# model selection:
+# Model selection:
 mods_AFR <- dredge(m_AFR, beta = "none")
 mods.avg_AFR <- summary(model.avg(mods_AFR, subset = delta < 4, fit = TRUE))
 print(mods.avg_AFR)
+# Confidence intervals:
 confint_AFR <- confint(mods.avg_AFR)
 print(confint_AFR)
 plot5 <- plot(mods.avg_AFR, full = TRUE, intercept = FALSE)
